@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+
+  # ─── MASTER NODE ────────────────────────────────────────────
+  kampus-master:
+    build: ./master
+    container_name: kampus-master
+    ports:
+      - "6000:6000"
+    networks:
+      - kampus-net
+    depends_on:
+      - kampus-shard1
+      - kampus-shard2
+      - kampus-shard3
+      - kampus-shard4
+      - kampus-shard5
+    environment:
+      - SHARD1_URL=http://kampus-shard1:5001
+      - SHARD2_URL=http://kampus-shard2:5002
+      - SHARD3_URL=http://kampus-shard3:5003
+      - SHARD4_URL=http://kampus-shard4:5004
+      - SHARD5_URL=http://kampus-shard5:5005
+
+  # ─── SHARD NODES ────────────────────────────────────────────
+  kampus-shard1:
+    build: ./shard
+    container_name: kampus-shard1
+    ports:
+      - "5001:5001"
+    networks:
+      - kampus-net
+    environment:
+      - SHARD_ID=shard1
+      - SHARD_PORT=5001
+
+  kampus-shard2:
+    build: ./shard
+    container_name: kampus-shard2
+    ports:
+      - "5002:5002"
+    networks:
+      - kampus-net
+    environment:
+      - SHARD_ID=shard2
+      - SHARD_PORT=5002
+
+  kampus-shard3:
+    build: ./shard
+    container_name: kampus-shard3
+    ports:
+      - "5003:5003"
+    networks:
+      - kampus-net
+    environment:
+      - SHARD_ID=shard3
+      - SHARD_PORT=5003
+
+  kampus-shard4:
+    build: ./shard
+    container_name: kampus-shard4
+    ports:
+      - "5004:5004"
+    networks:
+      - kampus-net
+    environment:
+      - SHARD_ID=shard4
+      - SHARD_PORT=5004
+
+  kampus-shard5:
+    build: ./shard
+    container_name: kampus-shard5
+    ports:
+      - "5005:5005"
+    networks:
+      - kampus-net
+    environment:
+      - SHARD_ID=shard5
+      - SHARD_PORT=5005
+
+networks:
+  kampus-net:
+    driver: bridge
